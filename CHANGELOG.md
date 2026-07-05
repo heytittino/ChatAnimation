@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1
+
+- Fix crash on 1.21 and 1.21.1
+
 ## 1.3.0
 
 - New config screen.

@@ -64,24 +64,16 @@ public class ChatAnimation implements ModInitializer {
 		return Math.min(age / fadeTime, 1.0F);
 	}
 
-	/*? if forge {*/
-	/*//? if 1.20.2 {
-	/^public ChatAnimation() {
-	^///? } else {
-    public ChatAnimation(final FMLJavaModLoadingContext context) {
-	//? }
-        ModConfig.init(MOD_ID, ModConfig.class);
+	//? if forge {
+	/*public ChatAnimation(final FMLJavaModLoadingContext context) {
+		ModConfig.init(MOD_ID, ModConfig.class);
 
-		//? if 1.20.2 {
-		/^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
-		^///? } else {
-		context.registerExtensionPoint(
-		//? }
+		net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
 			ConfigScreenHandler.ConfigScreenFactory.class,
 			() -> new ConfigScreenHandler.ConfigScreenFactory((c, parent) -> new ConfigScreen(parent))
 		);
-    }
-    *//*?}*/
+	}
+    *///? }
 
 	/*? if neoforge {*/
     /*public ChatAnimation(ModContainer container) {
