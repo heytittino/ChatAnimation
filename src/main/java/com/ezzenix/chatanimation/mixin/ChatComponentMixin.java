@@ -1,13 +1,14 @@
 package com.ezzenix.chatanimation.mixin;
 
 import com.ezzenix.chatanimation.ChatAnimation;
+import com.ezzenix.chatanimation.config.EasingStyle;
+import com.ezzenix.chatanimation.util.TimestampedMessageLine;
 import com.ezzenix.chatanimation.config.ModConfig;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
@@ -29,11 +30,11 @@ public class ChatComponentMixin {
 
     @Unique
     private float calculateDisplacement() {
-        if (!ModConfig.getConfig().enableMessageAnimation || this.chatScrollbarPos != 0) {
+        if (!ModConfig.enableMessageAnimation || this.chatScrollbarPos != 0) {
             return 0;
         }
 
-        float fadeTime = (float) ModConfig.getConfig().fadeTimeMessage;
+        float fadeTime = (float) ModConfig.fadeTimeMessage;
 
         int lineHeight = getLineHeight();
         float fadeOffsetYScale = 0.8f;
@@ -63,14 +64,14 @@ public class ChatComponentMixin {
 	 */
 
 	//? <=1.20.4 {
-	/*@WrapMethod(method = "render")
+	/*@WrapMethod(method = "extractRenderState")
 	private void wrapRender(GuiGraphicsExtractor guiGraphics, int tickCount, int mouseX, int mouseY, Operation<Void> original) {
 		ChatAnimation.wrap(guiGraphics, calculateDisplacement(), () -> original.call(guiGraphics, tickCount, mouseX, mouseY));
 	}
 	*///? }
 
     //? >=1.20.5 && <=1.21.10 {
-    /*@WrapMethod(method = "render")
+    /*@WrapMethod(method = "extractRenderState")
 	private void wrapRender(GuiGraphicsExtractor guiGraphics, int tickCount, int mouseX, int mouseY, boolean focused, Operation<Void> original) {
 		ChatAnimation.wrap(guiGraphics, calculateDisplacement(), () -> original.call(guiGraphics, tickCount, mouseX, mouseY, focused));
 	}
@@ -78,10 +79,10 @@ public class ChatComponentMixin {
 
     //? 1.21.11 {
 	/*@WrapOperation(
-		method = "render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;IIIZZ)V",
+		method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;IIIZZ)V",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/gui/components/ChatComponent;render(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IIZ)V"
+			target = "Lnet/minecraft/client/gui/components/ChatComponent;extractRenderState(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IIZ)V"
 		)
 	)
 	private void wrapRender(ChatComponent instance, ChatComponent.ChatGraphicsAccess guiGraphicsAccess, int i, int j, boolean bl, Operation<Void> original, @Local(argsOnly = true) GuiGraphicsExtractor context) {
@@ -107,17 +108,20 @@ public class ChatComponentMixin {
 	 */
 
 	//? <=1.21.5 {
-	/*@ModifyVariable(method = "render", at = @At("STORE"), ordinal = 3)
-	private double modifyChatOpacity(double original, @Local GuiMessage.Line line, @Local(argsOnly = true, ordinal = 0) int currentTick) {
-		return original * ChatAnimation.getOpacityFactor(currentTick - line.addedTime());
+	/*@ModifyVariable(method = "extractRenderState", at = @At("STORE"), ordinal = 3)
+	private double modifyChatOpacity(double original, @Local GuiMessage.Line line) {
+		float age = TimestampedMessageLine.age(line);
+		double alpha = original * ChatAnimation.getOpacityFactor(age);
+		return EasingStyle.SINE.apply(alpha);
 	}
 	*///? }
 
 	//? >=1.21.6 {
 	@ModifyVariable(method = "forEachLine", at = @At("STORE"), ordinal = 0)
 	private float modifyChatOpacity(float original, @Local GuiMessage.Line line) {
-		int currentTick = Minecraft.getInstance().gui.hud.getGuiTicks();
-		return original * (float)ChatAnimation.getOpacityFactor(currentTick - line.addedTime());
+		float age = TimestampedMessageLine.age(line);
+		float alpha = original * (float)ChatAnimation.getOpacityFactor(age);
+		return EasingStyle.SINE.apply((double) alpha).floatValue();
 	}
 	//? }
 

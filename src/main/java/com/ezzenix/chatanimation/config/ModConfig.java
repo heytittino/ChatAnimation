@@ -1,74 +1,25 @@
 package com.ezzenix.chatanimation.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.ezzenix.chatanimation.lib.config.BaseConfig;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+@BaseConfig.Config(title="Chat Animation Config")
+public class ModConfig extends BaseConfig {
+	@Comment(name="Messages")
+	public static Comment _messages;
+	@Entry(name="Animate Messages")
+	public static boolean enableMessageAnimation = true;
+	@Entry(name="Duration", min=10, max=800, suffix="ms")
+	public static int fadeTimeMessage = 150;
+	@Entry(name="Hide Indicator Line", desc="Hide the indicator line on the left of messages.")
+	public static boolean removeMessageIndicator = true;
+	@Entry(name="Animate Opacity")
+	public static boolean enableOpacity = true;
 
-public class ModConfig {
-
-	private static ModConfig instance;
-	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-	private transient File configFile;
-
-	private static final ModConfig DEFAULTS = new ModConfig();
-
-	public static ModConfig getConfig() {
-		if (instance == null) instance = new ModConfig();
-		return instance;
-	}
-
-	public void load(File configFile) {
-		this.configFile = configFile;
-
-		if (!configFile.exists()) {
-			save();
-			return;
-		}
-
-		try (FileReader reader = new FileReader(configFile)) {
-			instance = GSON.fromJson(reader, ModConfig.class);
-			instance.configFile = configFile;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void save() {
-		if (configFile == null) return;
-		try (FileWriter writer = new FileWriter(configFile)) {
-			GSON.toJson(this, writer);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void reset() {
-		enableMessageAnimation = DEFAULTS.enableMessageAnimation;
-		enableOpacity = DEFAULTS.enableOpacity;
-		enableTextFieldAnimation = DEFAULTS.enableTextFieldAnimation;
-		removeMessageIndicator = DEFAULTS.removeMessageIndicator;
-		fadeTimeMessage = DEFAULTS.fadeTimeMessage;
-		fadeTimeTextField = DEFAULTS.fadeTimeTextField;
-	}
-
-	public boolean isDefault() {
-		return this.enableMessageAnimation == DEFAULTS.enableMessageAnimation &&
-			this.enableOpacity == DEFAULTS.enableOpacity &&
-			this.enableTextFieldAnimation == DEFAULTS.enableTextFieldAnimation &&
-			this.removeMessageIndicator == DEFAULTS.removeMessageIndicator &&
-			this.fadeTimeMessage == DEFAULTS.fadeTimeMessage &&
-			this.fadeTimeTextField == DEFAULTS.fadeTimeTextField;
-	}
-
-	public boolean enableMessageAnimation = true;
-	public boolean enableOpacity = true;
-	public boolean enableTextFieldAnimation = true;
-	public boolean removeMessageIndicator = true;
-	public int fadeTimeMessage = 150;
-	public int fadeTimeTextField = 170;
+	@Comment(name="Input Field")
+	public static Comment _input;
+	@Entry(name="Animate Input Field")
+	public static boolean enableTextFieldAnimation = true;
+	@Entry(name="Duration", min=10, max=800, suffix="ms")
+	public static int fadeTimeTextField = 170;
 
 }

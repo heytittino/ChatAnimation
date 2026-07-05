@@ -23,7 +23,7 @@ public class ChatScreenMixin {
 
     @Unique
     private float calculateDisplacement() {
-        if (!ModConfig.getConfig().enableTextFieldAnimation) {
+        if (!ModConfig.enableTextFieldAnimation) {
             return 0;
         }
 
@@ -33,7 +33,7 @@ public class ChatScreenMixin {
             lastOpenTime = System.currentTimeMillis();
         }
 
-        float FADE_TIME = (float) ModConfig.getConfig().fadeTimeTextField;
+        float FADE_TIME = (float) ModConfig.fadeTimeTextField;
         float FADE_OFFSET = 8;
         float screenFactor = (float)client.getWindow().getHeight() / 1080;
         float timeSinceOpen = Math.min((float)(System.currentTimeMillis() - lastOpenTime), FADE_TIME);
@@ -52,7 +52,6 @@ public class ChatScreenMixin {
     }
 
 	@WrapOperation(
-		//~ if >=26.1 'render' -> 'extractRenderState'
 		method = "extractRenderState",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(IIIII)V")
 	)
@@ -61,9 +60,7 @@ public class ChatScreenMixin {
 	}
 
 	@WrapOperation(
-		//~ if >=26.1 'render' -> 'extractRenderState'
 		method = "extractRenderState",
-		//~ if >=26.1 'render' -> 'extractRenderState'
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V")
 	)
 	private void wrapScreenRender(ChatScreen instance, GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta, Operation<Void> original) {
@@ -72,8 +69,8 @@ public class ChatScreenMixin {
 
 	//? if <= 1.21.5 {
 	/*@WrapOperation(
-		method = "render",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V")
+		method = "extractRenderState",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/EditBox;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V")
 	)
 	private void wrapInputRender(EditBox instance, GuiGraphicsExtractor graphics, int i, int j, float v, Operation<Void> original) {
 		ChatAnimation.wrap(graphics, calculateDisplacement(), () -> original.call(instance, graphics, i, j, v));

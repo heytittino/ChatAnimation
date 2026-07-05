@@ -1,30 +1,25 @@
 package com.ezzenix.chatanimation;
 
-import java.io.File;
-
 import com.ezzenix.chatanimation.config.ModConfig;
-import com.ezzenix.chatanimation.config.ModConfigScreen;
+import com.ezzenix.chatanimation.lib.config.ConfigScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /*? if fabric {*/
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 /*?}*/
 
 /*? if forge {*/
 /*import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.fml.loading.FMLPaths;
 *//*?}*/
 
 /*? if neoforge {*/
 /*import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 *//*?}*/
 
@@ -45,44 +40,6 @@ public class ChatAnimation implements ModInitializer {
     public static final String MOD_ID = "chatanimation";
     public static final String MOD_NAME = "ChatAnimation";
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
-    public static final String CONFIG_FILE = "chatanimation.json";
-
-    /*? if forge {*/
-	/*//? if 1.20.2 {
-	/^public ChatAnimation() {
-	^///? } else {
-    public ChatAnimation(final FMLJavaModLoadingContext context) {
-	//? }
-        File configFile = FMLPaths.CONFIGDIR.get().resolve(ChatAnimation.CONFIG_FILE).toFile();
-        ModConfig.getConfig().load(configFile);
-
-		//? if 1.20.2 {
-		/^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
-		^///? } else {
-		context.registerExtensionPoint(
-		//? }
-			ConfigScreenHandler.ConfigScreenFactory.class,
-			() -> new ConfigScreenHandler.ConfigScreenFactory((c, parent) -> ModConfigScreen.create(parent))
-		);
-    }
-    *//*?}*/
-
-    /*? if neoforge {*/
-    /*public ChatAnimation(ModContainer container) {
-        File configFile = FMLPaths.CONFIGDIR.get().resolve(ChatAnimation.CONFIG_FILE).toFile();
-        ModConfig.getConfig().load(configFile);
-
-        container.registerExtensionPoint(IConfigScreenFactory.class, (c, parent) -> ModConfigScreen.create(parent));
-    }
-    *//*?}*/
-
-    /*? if fabric {*/
-    @Override
-    public void onInitialize() {
-        File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), ChatAnimation.CONFIG_FILE);
-        ModConfig.getConfig().load(configFile);
-    }
-    /*?}*/
 
 	public static void wrap(GuiGraphicsExtractor graphics, float displacement, Runnable runnable) {
 		if (displacement != 0) {
@@ -98,12 +55,45 @@ public class ChatAnimation implements ModInitializer {
 		}
 	}
 
-	public static double getOpacityFactor(int ticksAlive) {
-		if (!ModConfig.getConfig().enableMessageAnimation || !ModConfig.getConfig().enableOpacity) {
+	public static double getOpacityFactor(float age) {
+		if (!ModConfig.enableMessageAnimation || !ModConfig.enableOpacity) {
 			return 1;
 		}
-		float fadeTimeInTicks = (float) ModConfig.getConfig().fadeTimeMessage / 50.0F;
-		if (fadeTimeInTicks <= 0) return 1;
-		return Math.min((float) ticksAlive / fadeTimeInTicks, 1.0F);
+		float fadeTime = (float) ModConfig.fadeTimeMessage;
+		if (fadeTime <= 0) return 1;
+		return Math.min(age / fadeTime, 1.0F);
 	}
+
+	/*? if forge {*/
+	/*//? if 1.20.2 {
+	/^public ChatAnimation() {
+	^///? } else {
+    public ChatAnimation(final FMLJavaModLoadingContext context) {
+	//? }
+        ModConfig.init(MOD_ID, ModConfig.class);
+
+		//? if 1.20.2 {
+		/^net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
+		^///? } else {
+		context.registerExtensionPoint(
+		//? }
+			ConfigScreenHandler.ConfigScreenFactory.class,
+			() -> new ConfigScreenHandler.ConfigScreenFactory((c, parent) -> new ConfigScreen(parent))
+		);
+    }
+    *//*?}*/
+
+	/*? if neoforge {*/
+    /*public ChatAnimation(ModContainer container) {
+        ModConfig.init(MOD_ID, ModConfig.class);
+        container.registerExtensionPoint(IConfigScreenFactory.class, (c, parent) -> new ConfigScreen(parent));
+    }
+    *//*?}*/
+
+	/*? if fabric {*/
+	@Override
+	public void onInitialize() {
+		ModConfig.init(MOD_ID, ModConfig.class);
+	}
+	/*?}*/
 }
