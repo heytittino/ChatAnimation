@@ -14,6 +14,6 @@ Improves chat visuals by adding smooth animations.
 
 <br><br>
 
-<img src="https://cdn.modrinth.com/data/DnNYdJsx/images/784121d04549ae52370fc6d252cf68a0ca6d34ed.gif" width=70%></img>
+<img src="https://cdn.modrinth.com/data/DnNYdJsx/images/fd431cb3c6f7b0ac326f4ca861311cce7bb8c37d.gif" width=70%></img>
 
 </div>
