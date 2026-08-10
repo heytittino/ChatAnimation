@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2
+
+- Add localization support
+- Mod now uses my library mod
+
 ## 1.3.1
 
 - Fix crash on 1.21 and 1.21.1
