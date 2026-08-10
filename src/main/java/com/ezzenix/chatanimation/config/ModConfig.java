@@ -1,25 +1,26 @@
 package com.ezzenix.chatanimation.config;
 
-import com.ezzenix.chatanimation.lib.config.BaseConfig;
+import com.ezzenix.chatanimation.ChatAnimation;
+import com.ezzenix.emlib.config.EmConfig;
 
-@BaseConfig.Config(title="Chat Animation Config")
-public class ModConfig extends BaseConfig {
-	@Comment(name="Messages")
+@EmConfig.Config(title = ChatAnimation.MOD_NAME)
+public class ModConfig extends EmConfig {
+	@Comment
 	public static Comment _messages;
-	@Entry(name="Animate Messages")
+	@Entry
 	public static boolean enableMessageAnimation = true;
-	@Entry(name="Duration", min=10, max=800, suffix="ms")
+	@Entry(min=10, max=800, isSlider=true, suffix="ms")
 	public static int fadeTimeMessage = 150;
-	@Entry(name="Hide Indicator Line", desc="Hide the indicator line on the left of messages.")
+	@Entry
 	public static boolean removeMessageIndicator = true;
-	@Entry(name="Animate Opacity")
+	@Entry
 	public static boolean enableOpacity = true;
 
-	@Comment(name="Input Field")
+	@Comment
 	public static Comment _input;
-	@Entry(name="Animate Input Field")
+	@Entry
 	public static boolean enableTextFieldAnimation = true;
-	@Entry(name="Duration", min=10, max=800, suffix="ms")
+	@Entry(min=10, max=800, isSlider=true, suffix="ms")
 	public static int fadeTimeTextField = 170;
 
 }

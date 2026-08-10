@@ -1,45 +1,41 @@
 package com.ezzenix.chatanimation;
 
 import com.ezzenix.chatanimation.config.ModConfig;
-import com.ezzenix.chatanimation.lib.config.ConfigScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.ezzenix.emlib.config.EmConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*? if fabric {*/
-import net.fabricmc.api.ModInitializer;
-/*?}*/
+//? if forge {
+/*import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
 
-/*? if forge {*/
-/*import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.client.ConfigScreenHandler;
-*//*?}*/
+@Mod(value = ChatAnimation.MOD_ID)
+public class ChatAnimation {
+*///? }
 
-/*? if neoforge {*/
+//? if neoforge {
 /*import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-*//*?}*/
 
-/*? if forge {*/
-/*@Mod(value = ChatAnimation.MOD_ID)
+@Mod(value = ChatAnimation.MOD_ID, dist = Dist.CLIENT)
 public class ChatAnimation {
-*//*?}*/
+*///? }
 
-/*? if neoforge {*/
-/*@Mod(value = ChatAnimation.MOD_ID, dist = Dist.CLIENT)
-public class ChatAnimation {
-*//*?}*/
+//? if fabric {
+import net.fabricmc.api.ModInitializer;
 
-/*? if fabric {*/
 public class ChatAnimation implements ModInitializer {
-/*?}*/
+//? }
 
     public static final String MOD_ID = "chatanimation";
     public static final String MOD_NAME = "ChatAnimation";
-    public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
+
+	private static void initialize() {
+		EmConfig.init(MOD_ID, ModConfig.class);
+	}
 
 	public static void wrap(GuiGraphicsExtractor graphics, float displacement, Runnable runnable) {
 		if (displacement != 0) {
@@ -66,26 +62,20 @@ public class ChatAnimation implements ModInitializer {
 
 	//? if forge {
 	/*public ChatAnimation(final FMLJavaModLoadingContext context) {
-		ModConfig.init(MOD_ID, ModConfig.class);
-
-		net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
-			ConfigScreenHandler.ConfigScreenFactory.class,
-			() -> new ConfigScreenHandler.ConfigScreenFactory((c, parent) -> new ConfigScreen(parent))
-		);
+		initialize();
 	}
     *///? }
 
 	/*? if neoforge {*/
     /*public ChatAnimation(ModContainer container) {
-        ModConfig.init(MOD_ID, ModConfig.class);
-        container.registerExtensionPoint(IConfigScreenFactory.class, (c, parent) -> new ConfigScreen(parent));
+       initialize();
     }
     *//*?}*/
 
 	/*? if fabric {*/
 	@Override
 	public void onInitialize() {
-		ModConfig.init(MOD_ID, ModConfig.class);
+		initialize();
 	}
 	/*?}*/
 }
