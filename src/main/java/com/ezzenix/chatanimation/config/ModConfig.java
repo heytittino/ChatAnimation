@@ -7,20 +7,23 @@ import com.ezzenix.emlib.config.EmConfig;
 public class ModConfig extends EmConfig {
 	@Comment
 	public static Comment _messages;
-	@Entry
+	@Option
 	public static boolean enableMessageAnimation = true;
-	@Entry(min=10, max=800, isSlider=true, suffix="ms")
+	@Requires(option="enableMessageAnimation", value="true")
+	@Option(min=10, max=800, isSlider=true, suffix="ms")
 	public static int fadeTimeMessage = 150;
-	@Entry
-	public static boolean removeMessageIndicator = true;
-	@Entry
+	@Requires(option="enableMessageAnimation", value="true")
+	@Option
 	public static boolean enableOpacity = true;
+	@Option
+	public static boolean removeMessageIndicator = true;
 
 	@Comment
 	public static Comment _input;
-	@Entry
+	@Option
 	public static boolean enableTextFieldAnimation = true;
-	@Entry(min=10, max=800, isSlider=true, suffix="ms")
+	@Requires(option="enableTextFieldAnimation", value="true")
+	@Option(min=10, max=800, isSlider=true, suffix="ms")
 	public static int fadeTimeTextField = 170;
 
 }

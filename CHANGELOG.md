@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.3
+
+- Add 26.3 support
+- Make unused options hidden in the config screen when their required option is not enabled
+- Add Turkish translation ([#33](https://github.com/Ezzenix/ChatAnimation/pull/33))
+
 ## 1.3.2
 
 - Add localization support
